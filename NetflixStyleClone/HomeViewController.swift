@@ -53,6 +53,12 @@ class HomeViewController: UICollectionViewController {
         collectionView.collectionViewLayout = layout()
         
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+    }
+    
+    
     // contents 배열이 Content.plist 의 데이터 가지고 올 수 있도록 함수 생성
     func getContent() -> [Content] { // Content 의 배열을 리턴하는 함수
         // 가지고 올 plist 의 경로 설정
@@ -77,8 +83,8 @@ class HomeViewController: UICollectionViewController {
                 return self.createRankTypeSection()
             case .main:
                 return self.createMainTypeSecion()
-            default:
-                return nil
+            //default:
+                //return nil
             }
         }
     }
@@ -174,8 +180,8 @@ class HomeViewController: UICollectionViewController {
     }
 }
 
-// UIColletcionView DataSoure, Delegate
-extension HomeViewController {
+// UIColletcionView DataSource, Delegate
+extension HomeViewController{
     // 섹션당 보여질 셀의 갯수
     override func collectionView(_ colletcionView: UICollectionView, numberOfItemsInSection section: Int ) -> Int {
         if contents[section].sectionType == .basic
@@ -218,9 +224,10 @@ extension HomeViewController {
             cell.descriptionLabel.text = mainItem?.description
             return cell
             
-        default:
-            return UICollectionViewCell()
+        //default:
+            //return UICollectionViewCell()
         }
+        
     }
     
     // CollectiomView header 지정
@@ -243,9 +250,24 @@ extension HomeViewController {
     // Cell 선택시 액션을 감지하는 delegate 설정
     // 현재 console 에만 출력, 후에 디테일한 부분 설정
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        /*guard let detailView = UIStoryboard(name: "DetailViewController", bundle: nil).instantiateViewController(withIdentifier: "DetailViewController") as? DetailViewController else { return }*/
         let sectionName = contents[indexPath.section].sectionName
         print("Test: \(sectionName) 섹션의 \(indexPath.row+1)번째 콘텐츠")
+        
+        // 선택한 셀의 contents 에 대한 액션을 설정
+        let selectContents = contents[indexPath.section].contentItem[indexPath.row]
+        let detailView = DetailViewController()
+        detailView.contents = selectContents
+        self.navigationController?.pushViewController(detailView, animated: true)
+        
     }
+    
+    func configureCollectionView() {
+        collectionView.delegate = self
+    }
+    
+    // DetailViewController 로 가는 곳 정의
+    
 }
 
 
